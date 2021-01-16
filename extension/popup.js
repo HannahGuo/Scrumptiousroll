@@ -1,10 +1,34 @@
 let foundFoodButton = document.getElementById('foodDetectedButton');
+let backgroundPage = chrome.extension.getBackgroundPage();
+
+function renderFood() {
+  let foodList = document.getElementById("labelledImage");
+  while (foodList.hasChildNodes()) {
+    foodList.removeChild(foodList.firstChild);
+  }
+
+  let foodObjects = JSON.parse(localStorage.getItem("foodObjects") || "[]");
+  backgroundPage.console.log('foo');
+
+  foodObjects.forEach(function (foodItem, index) {
+    let screenshot = document.createElement("img");
+    screenshot.setAttribute("id", "screenshot");
+    screenshot.src = foodItem.src;
+    document.getElementById("labelledImage").appendChild(screenshot);
+  });
+}
 
 foundFoodButton.onclick = function (element) {
   chrome.tabs.captureVisibleTab(null, {}, function (image) {
-    alert(image);
-    let newImg = `<img src="${image}">`
-    document.getElementById("labelledImage").innerHTML = newImg;
+    let newFood = {
+      src: image,
+      recipes: "filler"
+    };
+
+    let foodObjects = JSON.parse(localStorage.getItem("foodObjects") || "[]");
+    foodObjects.push(newFood);
+    localStorage.setItem("foodObjects", JSON.stringify(foodObjects));
+    renderFood();
 
     // Predict the food
     const imageElement = document.querySelector('#labelledImage > img');
@@ -16,3 +40,5 @@ foundFoodButton.onclick = function (element) {
 
   });
 };
+
+document.onload = renderFood();
