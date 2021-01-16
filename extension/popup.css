@@ -1,0 +1,48 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    color: white;
+}
+
+body {
+    background-image: url("images/akatsuki.gif");
+    padding: 40px;
+    width: 300px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+.titleFont {
+    font-family: 'Potta One', cursive;
+}
+
+h1 {
+    font-size: 48px;
+}
+
+#foodDetectedButton {
+    font-family: 'Potta One', cursive;
+    background-color: #ff9966;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    margin: 0 auto;
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+#foodDetectedButton:hover {
+    background-color:  #ff5500;
+}
