@@ -10,13 +10,6 @@ body {
     color: white;
 }
 
-body {
-    background-image: url("images/akatsuki.gif");
-    background-repeat: no-repeat;
-    padding: 40px;
-    width: 300px;
-}
-
 h1,
 h2,
 h3,
@@ -28,6 +21,15 @@ h5,
 
 h1 {
     font-size: 48px;
+}
+
+#initialDiv {
+    padding: 40px;
+    width: 300px;
+    background-image: url("images/akatsuki.gif");
+    background-size: cover;
+    background-repeat: no-repeat;
+    margin: 0;
 }
 
 #foodDetectedButton {
@@ -44,11 +46,42 @@ h1 {
     cursor: pointer;
 }
 
-#foodDetectedButton:hover {
-    background-color:  #ff5500;
+#showRecipesButton {
+    font-family: 'Potta One', cursive;
+    background-color: #00802b;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    margin: 0 auto;
+    border-radius: 50px;
+    cursor: pointer;
 }
 
-#screenshot {
+#foodDetectedButton:hover {
+    background-color: #ff5500;
+}
+
+#showRecipesButton:hover {
+    background-color: #004d1a;
+}
+
+.screenshot {
     width: 100%;
     height: auto;
+}
+
+#recipesDiv {
+    display: none;
+    color: black;
+    padding: 40px;
+    width: 300px;
+}
+
+#foodTable td {
+    margin-top: 20px;
+    border: 1px solid lightgray;
+    padding: 30px;
 }

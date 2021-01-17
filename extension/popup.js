@@ -1,18 +1,16 @@
 let foundFoodButton = document.getElementById('foodDetectedButton');
+let showRecipesButton = document.getElementById('showRecipesButton');
 
 function renderFood() {
-  let foodList = document.getElementById("labelledImage");
-  while (foodList.hasChildNodes()) {
-    foodList.removeChild(foodList.firstChild);
-  }
+  let foodList = document.getElementById("foodTable");
+  foodList.innerHTML = "";
 
   let foodObjects = JSON.parse(localStorage.getItem("foodObjects") || "[]");
 
   foodObjects.forEach(function (foodItem, index) {
-    let screenshot = document.createElement("img");
-    screenshot.setAttribute("id", "screenshot");
-    screenshot.src = foodItem.src;
-    document.getElementById("labelledImage").appendChild(screenshot);
+    let newFoodEntry = foodList.insertRow(0);
+    let cellImage = newFoodEntry.insertCell(0);
+    cellImage.innerHTML = `<img class="screenshot" src="${foodItem.src}"><br><br>NEW CELL2`;
   });
 }
 
@@ -24,9 +22,11 @@ foundFoodButton.onclick = function (element) {
     };
 
     let foodObjects = JSON.parse(localStorage.getItem("foodObjects") || "[]");
-    foodObjects.push(newFood);
+    foodObjects.unshift(newFood);
     localStorage.setItem("foodObjects", JSON.stringify(foodObjects));
     renderFood();
+
+    alert("New food had been added!")
 
     // Predict the food
     const imageElement = document.querySelector('#labelledImage > img');
@@ -39,8 +39,15 @@ foundFoodButton.onclick = function (element) {
   });
 };
 
-(function() {
-  // your page initialization code here
-  // the DOM will be available here
-  renderFood();
-})();
+showRecipesButton.onclick = function (element) {
+  if (showRecipesButton.value.includes("Show")) {
+    document.getElementById("recipesDiv").style.display = "block";
+    showRecipesButton.style.backgroundColor = "#990000";
+    renderFood();
+    showRecipesButton.value = "Hide recipes!";
+  } else {
+    showRecipesButton.value = "\uD83C\uDF5B Show me my recipes!";
+    showRecipesButton.style.backgroundColor = "#004d1a";
+    document.getElementById("recipesDiv").style.display = "none";
+  }
+}
