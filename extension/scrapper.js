@@ -7,7 +7,7 @@ let FOOD_NETWORK_SUFFIX = "-/CUSTOM_FACET:RECIPE_FACET";  // Search for ONLY rec
  * @typedef RecipeResult
  * @property {string} name Name of the recipe
  * @property {string} author Author of the recipe
- * @property {string} difficulty Difficulty of the recipe
+ * @property {string} [difficulty] Difficulty of the recipe
  * @property {string} [estimatedTime] Estimated amount of time to complete the recipe
  * @property {string} link Link to the recipe
  * @property {string} [image] Image of the completed recipe
@@ -28,7 +28,7 @@ let searchForRecipes = async keywords => {
         const headerElement = element.querySelector('.m-MediaBlock__a-HeadlineText');
 
         const name = headerElement.textContent;
-        const link = headerElement.parentElement.getAttribute('href');
+        const link = `https:${headerElement.parentElement.getAttribute('href')}`;
         const image = element.querySelector('.m-MediaBlock__a-Image') ? element.querySelector('.m-MediaBlock__a-Image').getAttribute('src') : null;
         const author = element.querySelector('.m-Info__a-AssetInfo').textContent.replace('Courtesy of ', ''); // "Courtesy of AUTHOR_NAME" so we have to get rid of the courtesy part
         const rating = element.querySelectorAll('.gig-rating-star-full').length;
@@ -36,7 +36,7 @@ let searchForRecipes = async keywords => {
 
         const recipeResponse = await fetch(link);
         const recipeDoc = new DOMParser().parseFromString((await recipeResponse.text()), 'text/html');
-        const difficulty = recipeDoc.querySelector('.o-RecipeInfo__m-Level .o-RecipeInfo__a-Description').textContent;
+        const difficulty = recipeDoc.querySelector('.o-RecipeInfo__m-Level .o-RecipeInfo__a-Description') ? recipeDoc.querySelector('.o-RecipeInfo__m-Level .o-RecipeInfo__a-Description').textContent : null;
         const estimatedTime = recipeDoc.querySelector('.o-RecipeInfo__a-Description.m-RecipeInfo__a-Description--Total') ? recipeDoc.querySelector('.o-RecipeInfo__a-Description.m-RecipeInfo__a-Description--Total').textContent : null;
 
         return {
