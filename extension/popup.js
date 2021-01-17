@@ -14,14 +14,15 @@ function renderFood() {
     searchForRecipes(foodItem.name).then((recipes) => {
       let topRecipe = recipes[0];
       cellImage.innerHTML = `<img class="screenshot" src="${foodItem.src}"><br><br> <h3>${topRecipe.name}</h3>
-      <strong>Recipe by:</strong> ${topRecipe.author}<br><br><a href="https:${topRecipe.link}" target="_blank"><div class="recipeButton">&#128073; Get Recipe! &#128072;</div></a>`;
-      console.log(topRecipe.link.substring(2));
+      <strong>Recipe by:</strong> ${topRecipe.author}<br><strong>Time Needed: </strong>${topRecipe.estimatedTime}<br><strong>Difficulty Level: </strong>${topRecipe.difficulty}<br><br><a href="${topRecipe.link}" target="_blank"><div class="recipeButton">&#128073; Get Recipe! &#128072;</div></a>`;
     });
   });
 }
 
 foundFoodButton.onclick = function (element) {
   chrome.tabs.captureVisibleTab(null, {}, function (image) {
+
+    // DAP MOVE EVERYTHING BETWEEN THESE LINES TO INSIDE YOUR MODEL AND CHANGE THE NAME IN THE JSON OBJ TO BE WHATEVER THE MODAL SAYS IT IS 
     let newFood = {
       src: image,
       name: "from modal"
@@ -32,7 +33,22 @@ foundFoodButton.onclick = function (element) {
     localStorage.setItem("foodObjects", JSON.stringify(foodObjects));
     renderFood();
 
-    alert("New food had been added!");
+    searchForRecipes(newFood.name).then((recipes) => {
+      let topRecipe = recipes[0];
+      let divOverlay = document.getElementById("divOverlay");
+      divOverlay.style.display = "block";
+
+      if (newFood.image) {
+        divOverlay.innerHTML = `<h2>You found a recipe for ${newFood.name}!</h2><br><img class="smolImg" src="${image}"><br><img class="smolImg" src="${newFood.image}"><br><strong>Recipe by: </strong>${topRecipe.author}<br><strong>Time Needed: </strong>${topRecipe.estimatedTime}<br><strong>Difficulty Level: </strong>${topRecipe.difficulty}<br><br><a href="${topRecipe.link}" target="_blank"><div class="recipeButton popupButton">&#128073; Get Recipe! &#128072;</div></a><br><input type="button" class="popupButton" id="closeButton" value="&#10060; Close"></input>`
+      } else {
+        divOverlay.innerHTML = `<h2>You found a recipe for ${newFood.name}!</h2><br><img class="smolImg" src="${image}"><br><strong>Recipe by: </strong>${topRecipe.author}<br><strong>Time Needed: </strong>${topRecipe.estimatedTime}<br><strong>Difficulty Level: </strong>${topRecipe.difficulty}<br><br><a href="${topRecipe.link}" target="_blank"><div class="recipeButton popupButton">&#128073; Get Recipe! &#128072;</div></a><br><input type="button" class="popupButton" id="closeButton" value="&#10060; Close"></input>`
+      }
+
+      document.getElementById("closeButton").onclick = function (element) {
+        document.getElementById("divOverlay").style.display = "none";
+      }
+    });
+        // DAP MOVE EVERYTHING BETWEEN THESE LINES TO INSIDE YOUR MODEL AND CHANGE THE NAME IN THE JSON OBJ TO BE WHATEVER THE MODAL SAYS IT IS 
 
     // Predict the food
     const imageElement = document.querySelector('#tabScreenshot');

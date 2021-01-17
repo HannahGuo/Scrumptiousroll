@@ -81,13 +81,30 @@ h1 {
     text-align: center;
     text-decoration: none;
     display: block;
-    margin: 0 auto;
     border-radius: 50px;
     cursor: pointer;
 }
 
 .recipeButton:hover{
     background-color: #00008b;
+}
+
+#closeButton {
+    font-family: 'Potta One', cursive;
+    background-color: #990000;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    border-radius: 50px;
+    cursor: pointer;
+    width: 100%;
+}
+
+#closeButton:hover{
+    background-color: #5b0000;
 }
 
 .screenshot {
@@ -116,4 +133,30 @@ h1 {
 
 .centerMe a {
     color: white;
+}
+
+#divOverlay {
+    background-image: url("images/drstone.gif");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    left: 0;
+    top:0;
+    height: 100%;
+    z-index: 3;
+    display: none;
+    color: white;
+    padding: 40px;
+}
+
+.popupButton {
+    margin: 0 auto;
+}
+
+.smolImg {
+    width: 80%;
+    height: auto;
+    margin: 0 auto;
+    display: block;
 }
