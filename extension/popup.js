@@ -20,48 +20,42 @@ function renderFood() {
 }
 
 foundFoodButton.onclick = function (element) {
-  chrome.tabs.captureVisibleTab(null, {}, function (image) {
+  chrome.tabs.captureVisibleTab(null, {}, async function (image) {
 
     // Predict the food
-    const imageElement = document.querySelector('#tabScreenshot');
-    imageElement.src = image;
-    imageElement.onload = () => { // Tensorflow doesn't like not seeing a width and height attribute on the element, so we have to set it ourselves before classifying it.
-      imageElement.setAttribute('width', imageElement.width);
-      imageElement.setAttribute('height', imageElement.height);
-      getFoodPredictionsForImage(imageElement).then(predictions => {
-        const highestPrediction = predictions[0];
+    getFoodPredictionsForImage(image).then(predictions => {
+      const highestPrediction = predictions[0];
 
-        if (highestPrediction.probability < 0.25) {
-          // TODO: MMS COME BACKKKK, WHAT HAPPENS IF IT DOESN'T PREDICT ANYTHING
-          return;
+      if (highestPrediction.probability < 0.25) {
+        // TODO: MMS COME BACKKKK, WHAT HAPPENS IF IT DOESN'T PREDICT ANYTHING
+        return;
+      }
+
+      searchForRecipes(highestPrediction.className).then(recipes => {
+        let topRecipe = recipes[0];
+
+        let foodObjects = JSON.parse(localStorage.getItem("foodObjects") || "[]");
+        foodObjects.push(topRecipe);
+        localStorage.setItem("foodObjects", JSON.stringify(foodObjects));
+        renderFood();
+
+        let divOverlay = document.getElementById("divOverlay");
+        divOverlay.style.display = "block";
+  
+        if (topRecipe.image) {
+          divOverlay.innerHTML = `<h2>You found a recipe for ${topRecipe.name}!</h2><br><img class="smolImg" src="${image}"><br><img class="smolImg" src="${topRecipe.image}"><br><strong>Recipe by: </strong>${topRecipe.author}<br><strong>Time Needed: </strong>${topRecipe.estimatedTime}<br><strong>Difficulty Level: </strong>${topRecipe.difficulty}<br><br><a href="${topRecipe.link}" target="_blank"><div class="recipeButton popupButton">&#128073; Get Recipe! &#128072;</div></a><br><input type="button" class="popupButton" id="closeButton" value="&#10060; Close"></input>`
+        } else {
+          divOverlay.innerHTML = `<h2>You found a recipe for ${topRecipe.name}!</h2><br><img class="smolImg" src="${image}"><br><strong>Recipe by: </strong>${topRecipe.author}<br><strong>Time Needed: </strong>${topRecipe.estimatedTime}<br><strong>Difficulty Level: </strong>${topRecipe.difficulty}<br><br><a href="${topRecipe.link}" target="_blank"><div class="recipeButton popupButton">&#128073; Get Recipe! &#128072;</div></a><br><input type="button" class="popupButton" id="closeButton" value="&#10060; Close"></input>`
         }
-
-        searchForRecipes(highestPrediction.className).then(recipes => {
-          let topRecipe = recipes[0];
-
-          let foodObjects = JSON.parse(localStorage.getItem("foodObjects") || "[]");
-          foodObjects.push(topRecipe);
-          localStorage.setItem("foodObjects", JSON.stringify(foodObjects));
-          renderFood();
-
-          let divOverlay = document.getElementById("divOverlay");
-          divOverlay.style.display = "block";
-    
-          if (topRecipe.image) {
-            divOverlay.innerHTML = `<h2>You found a recipe for ${topRecipe.name}!</h2><br><img class="smolImg" src="${image}"><br><img class="smolImg" src="${topRecipe.image}"><br><strong>Recipe by: </strong>${topRecipe.author}<br><strong>Time Needed: </strong>${topRecipe.estimatedTime}<br><strong>Difficulty Level: </strong>${topRecipe.difficulty}<br><br><a href="${topRecipe.link}" target="_blank"><div class="recipeButton popupButton">&#128073; Get Recipe! &#128072;</div></a><br><input type="button" class="popupButton" id="closeButton" value="&#10060; Close"></input>`
-          } else {
-            divOverlay.innerHTML = `<h2>You found a recipe for ${topRecipe.name}!</h2><br><img class="smolImg" src="${image}"><br><strong>Recipe by: </strong>${topRecipe.author}<br><strong>Time Needed: </strong>${topRecipe.estimatedTime}<br><strong>Difficulty Level: </strong>${topRecipe.difficulty}<br><br><a href="${topRecipe.link}" target="_blank"><div class="recipeButton popupButton">&#128073; Get Recipe! &#128072;</div></a><br><input type="button" class="popupButton" id="closeButton" value="&#10060; Close"></input>`
-          }
-    
-          document.getElementById("closeButton").onclick = function (element) {
-            document.getElementById("divOverlay").style.display = "none";
-          };
-
-        });
-
+  
+        document.getElementById("closeButton").onclick = function (element) {
+          document.getElementById("divOverlay").style.display = "none";
+        };
 
       });
-    };
+
+
+    });
   });
 };
 

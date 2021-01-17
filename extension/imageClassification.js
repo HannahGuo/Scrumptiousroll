@@ -2,10 +2,12 @@ let foodModel = null;
 /**
  * 
  * @param {HTMLImageElement} image
- */
-let getFoodPredictionsForImage = async image => {
-    const base64 = image.src;
-    const response = await fetch('localhost:8000/predict');
-    const predictions = await response.json();
-    return predictions;
+*/
+let getFoodPredictionsForImage = async url => {
+    const r = await fetch('http://localhost:8000/predict', {
+        method: 'POST',
+        body: JSON.stringify({ url })
+    });
+    const predictions = await r.json();
+    return predictions; // [{ className: 'food name', probability: 0.5 }]
 };
