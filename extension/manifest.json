@@ -1,5 +1,5 @@
 {
-  "name": "ScrumptiousRoll",
+  "name": "Scrumptiousroll",
   "version": "1.0",
   "description": "teaching dap what carbonara is since 2k21 😎!",
   "permissions": ["tabs", "activeTab", "declarativeContent", "storage"],
