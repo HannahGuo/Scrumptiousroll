@@ -22,7 +22,7 @@ foundFoodButton.onclick = function (element) {
     };
 
     let foodObjects = JSON.parse(localStorage.getItem("foodObjects") || "[]");
-    foodObjects.unshift(newFood);
+    foodObjects.push(newFood);
     localStorage.setItem("foodObjects", JSON.stringify(foodObjects));
     renderFood();
 
@@ -51,3 +51,16 @@ showRecipesButton.onclick = function (element) {
     document.getElementById("recipesDiv").style.display = "none";
   }
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+  var links = document.getElementsByTagName("a");
+  for (var i = 0; i < links.length; i++) {
+      (function () {
+          var ln = links[i];
+          var location = ln.href;
+          ln.onclick = function () {
+              chrome.tabs.create({active: true, url: location});
+          };
+      })();
+  }
+});

@@ -85,3 +85,13 @@ h1 {
     border: 1px solid lightgray;
     padding: 30px;
 }
+
+.centerMe {
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+}
+
+.centerMe a {
+    color: white;
+}
