@@ -68,6 +68,10 @@ h1 {
     background-color: #004d1a;
 }
 
+#screenshot {
+    display: none;
+}
+
 .screenshot {
     width: 100%;
     height: auto;

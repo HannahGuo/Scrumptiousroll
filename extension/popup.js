@@ -29,7 +29,8 @@ foundFoodButton.onclick = function (element) {
     alert("New food had been added!")
 
     // Predict the food
-    const imageElement = document.querySelector('#labelledImage > img');
+    const imageElement = document.querySelector('#screenshot');
+    imageElement.src = image;
     imageElement.onload = () => { // Tensorflow doesn't like not seeing a width and height attribute on the element, so we have to set it ourselves before classifying it.
       imageElement.setAttribute('width', imageElement.width);
       imageElement.setAttribute('height', imageElement.height);
