@@ -25,17 +25,24 @@ foundFoodButton.onclick = function (element) {
     // Predict the food
     getFoodPredictionsForImage(image).then(predictions => {
       const highestPrediction = predictions[0];
-
-      if (highestPrediction.probability < 0.25) {
-        // TODO: MMS COME BACKKKK, WHAT HAPPENS IF IT DOESN'T PREDICT ANYTHING
-        return;
-      }
+      console.log(highestPrediction.className + " HIIIIIII DAPPPP")
 
       searchForRecipes(highestPrediction.className).then(recipes => {
         let topRecipe = recipes[0];
 
+        if(!topRecipe) {
+          alert("No recipes found :C")
+          return;
+        }
+
+        
+        let newFood = {
+          src: image,
+          name: topRecipe.name
+        };
+
         let foodObjects = JSON.parse(localStorage.getItem("foodObjects") || "[]");
-        foodObjects.push(topRecipe);
+        foodObjects.push(newFood);
         localStorage.setItem("foodObjects", JSON.stringify(foodObjects));
         renderFood();
 
@@ -43,16 +50,16 @@ foundFoodButton.onclick = function (element) {
         divOverlay.style.display = "block";
   
         if (topRecipe.image) {
-          divOverlay.innerHTML = `<h2>You found a recipe for ${topRecipe.name}!</h2><br><img class="smolImg" src="${image}"><br><img class="smolImg" src="${topRecipe.image}"><br><strong>Recipe by: </strong>${topRecipe.author}<br><strong>Time Needed: </strong>${topRecipe.estimatedTime}<br><strong>Difficulty Level: </strong>${topRecipe.difficulty}<br><br><a href="${topRecipe.link}" target="_blank"><div class="recipeButton popupButton">&#128073; Get Recipe! &#128072;</div></a><br><input type="button" class="popupButton" id="closeButton" value="&#10060; Close"></input>`
+          divOverlay.innerHTML = `<h2>You found a recipe for ${topRecipe.name}!</h2><br><img class="smolImg" src="${image}"><br><img class="smolImg" src="${topRecipe.image}"><br><strong>Recipe by: </strong>${topRecipe.author}<br><strong>Time Needed: </strong>${topRecipe.estimatedTime}<br><strong>Difficulty Level: </strong>${topRecipe.difficulty}<br><a href="${topRecipe.link}" target="_blank"><div class="recipeButton popupButton">&#128073; Get Recipe! &#128072;</div></a><input type="button" class="popupButton" id="closeButton" value="&#10060; Close"></input>`
         } else {
-          divOverlay.innerHTML = `<h2>You found a recipe for ${topRecipe.name}!</h2><br><img class="smolImg" src="${image}"><br><strong>Recipe by: </strong>${topRecipe.author}<br><strong>Time Needed: </strong>${topRecipe.estimatedTime}<br><strong>Difficulty Level: </strong>${topRecipe.difficulty}<br><br><a href="${topRecipe.link}" target="_blank"><div class="recipeButton popupButton">&#128073; Get Recipe! &#128072;</div></a><br><input type="button" class="popupButton" id="closeButton" value="&#10060; Close"></input>`
+          divOverlay.innerHTML = `<h2>You found a recipe for ${topRecipe.name}!</h2><br><img class="smolImg" src="${image}"><br><strong>Recipe by: </strong>${topRecipe.author}<br><strong>Time Needed: </strong>${topRecipe.estimatedTime}<br><strong>Difficulty Level: </strong>${topRecipe.difficulty}<br><a href="${topRecipe.link}" target="_blank"><div class="recipeButton popupButton">&#128073; Get Recipe! &#128072;</div></a><input type="button" class="popupButton" id="closeButton" value="&#10060; Close"></input>`
         }
   
         document.getElementById("closeButton").onclick = function (element) {
           document.getElementById("divOverlay").style.display = "none";
         };
 
-      });
+      }).catch(console.log);
 
 
     });

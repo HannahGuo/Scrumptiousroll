@@ -17,11 +17,14 @@ from io import BytesIO
 import numpy as np
 from glob import glob
 import cv2
+from flask_cors import CORS, cross_origin
 
 app = flask.Flask(__name__)
+
 app.config["DEBUG"] = True
 
 def preprocess_and_decode(img_str, new_shape=[256,256]):
+    img_str = img_str[23:]
     img = tf.io.decode_base64(img_str)
     img = tf.image.decode_jpeg(img, channels=3)
     img = tf.image.resize(img, new_shape, method=tf.image.ResizeMethod.BILINEAR, preserve_aspect_ratio=False)
@@ -32,6 +35,7 @@ def preprocess_and_decode(img_str, new_shape=[256,256]):
 
 @app.route('/api/predict', methods=['POST'])
 def api_predict():
+
     json = request.json
     if 'url' in request.json:
         url = request.json['url']
@@ -58,13 +62,9 @@ def api_predict():
     score = tf.nn.softmax(predictions[0])
 
     class_names = glob("./dataset/train/*")
-    print(len(class_names))
     class_names = sorted(class_names)
     map = dict(zip(class_names, score.numpy().tolist()))
-    resp = jsonify(map)
-    resp.headers.add('Access-Control-Allow-Origin', '*')
-
-    return resp
+    return jsonify(map)
 
 def train():
     data_set = tf.keras.preprocessing.image_dataset_from_directory(
