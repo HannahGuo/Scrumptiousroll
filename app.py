@@ -20,6 +20,9 @@ import cv2
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
+app.config['CORS_HEADERS'] = 'Content-Type'
+
+cors = CORS(app, resources={r"/api/predict": {"origins": "http://localhost:5000"}})
 
 def preprocess_and_decode(img_str, new_shape=[256,256]):
     img = tf.io.decode_base64(img_str)
@@ -31,6 +34,7 @@ def preprocess_and_decode(img_str, new_shape=[256,256]):
     return img
 
 @app.route('/api/predict', methods=['POST'])
+@cross_origin(origin='localhost',headers=['Content- Type','Authorization'])
 def api_predict():
     json = request.json
     if 'url' in request.json:
