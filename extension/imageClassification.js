@@ -1,25 +1,11 @@
 let foodModel = null;
-
-// TODO: Load our food model when complete
-mobilenet.load().then(model => {
-    foodModel = model;
-});
-
-/**
- * @typedef Prediction
- * @property {string} className Prediction name
- * @property {number} probability a decimal from 0-1 on how accurate the model thinks it is this 
- */
-
 /**
  * 
- * @param {HTMLImageElement} image 
- * @returns {Prediction[]}
+ * @param {HTMLImageElement} image
  */
 let getFoodPredictionsForImage = async image => {
-    if (!foodModel) {
-        foodModel = await mobilenet.load(); // TODO: Load our food model when complete
-    }
-    const predictions = await foodModel.classify(image);
+    const base64 = image.src;
+    const response = await fetch('localhost:8000/predict');
+    const predictions = await response.json();
     return predictions;
 };

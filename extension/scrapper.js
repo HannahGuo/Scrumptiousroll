@@ -29,7 +29,7 @@ let searchForRecipes = async keywords => {
 
         const name = headerElement.textContent;
         const link = `https:${headerElement.parentElement.getAttribute('href')}`;
-        const image = element.querySelector('.m-MediaBlock__a-Image') ? element.querySelector('.m-MediaBlock__a-Image').getAttribute('src') : null;
+        const src = element.querySelector('.m-MediaBlock__a-Image') ? element.querySelector('.m-MediaBlock__a-Image').getAttribute('src') : null;
         const author = element.querySelector('.m-Info__a-AssetInfo').textContent.replace('Courtesy of ', ''); // "Courtesy of AUTHOR_NAME" so we have to get rid of the courtesy part
         const rating = element.querySelectorAll('.gig-rating-star-full').length;
         const reviews = element.querySelector('.gig-rating-ratingsum') ? parseInt(element.querySelector('.gig-rating-ratingsum').textContent.replace(/\D/g, '')) : 0;
@@ -43,7 +43,7 @@ let searchForRecipes = async keywords => {
             name,
             author,
             link,
-            image,
+            src,
             rating,
             reviews,
             difficulty,
