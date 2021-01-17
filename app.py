@@ -30,7 +30,7 @@ def preprocess_and_decode(img_str, new_shape=[256,256]):
     img = tf.expand_dims(img, 0) # Create a batch
     return img
 
-@app.route('/api/predict', methods=['GET'])
+@app.route('/api/predict', methods=['POST'])
 def api_predict():
     json = request.json
     if 'url' in request.json:

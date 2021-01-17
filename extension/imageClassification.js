@@ -5,7 +5,7 @@ let foodModel = null;
 */
 let getFoodPredictionsForImage = async url => {
     const r = await fetch('http://localhost:5000/api/predict', {
-        method: 'GET',
+        method: 'POST',
         body: JSON.stringify({ url })
     });
     const predictions = (await r.json()).map(p => ({ 
