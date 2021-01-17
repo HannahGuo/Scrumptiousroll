@@ -7,6 +7,8 @@ const FOOD_NETWORK_SUFFIX = "-/CUSTOM_FACET:RECIPE_FACET";  // Search for ONLY r
  * @typedef RecipeResult
  * @property {string} name Name of the recipe
  * @property {string} author Author of the recipe
+ * @property {string} difficulty Difficulty of the recipe
+ * @property {string} [estimatedTime] Estimated amount of time to complete the recipe
  * @property {string} link Link to the recipe
  * @property {string} [image] Image of the completed recipe
  * @property {number} rating Rating out of 5 of the recipe
@@ -21,7 +23,7 @@ const searchForRecipes = async keywords => {
     const response = await fetch(`${FOOD_NETWORK_BASE_URL}${keywords}${FOOD_NETWORK_SUFFIX}`);
     const doc = new DOMParser().parseFromString((await response.text()), 'text/html');
     const recipeElements = doc.querySelectorAll('.o-RecipeResult');
-    return Array.from(recipeElements).map(element => {
+    return (await Promise.all(Array.from(recipeElements).map(async element => {
         const headerElement = element.querySelector('.m-MediaBlock__a-HeadlineText');
 
         const name = headerElement.textContent;
@@ -31,16 +33,23 @@ const searchForRecipes = async keywords => {
         const rating = element.querySelectorAll('.gig-rating-star-full').length;
         const reviews = element.querySelector('.gig-rating-ratingsum') ? parseInt(element.querySelector('.gig-rating-ratingsum').textContent.replace(/\D/g, '')) : 0;
 
+        const recipeResponse = await fetch(link);
+        const recipeDoc = new DOMParser().parseFromString((await recipeResponse.text()), 'text/html');
+        const difficulty = recipeDoc.querySelector('.o-RecipeInfo__m-Level .o-RecipeInfo__a-Description').textContent;
+        const estimatedTime = recipeDoc.querySelector('.o-RecipeInfo__a-Description.m-RecipeInfo__a-Description--Total') ? recipeDoc.querySelector('.o-RecipeInfo__a-Description.m-RecipeInfo__a-Description--Total').textContent : null;
+
         return {
             name,
             author,
             link,
             image,
             rating,
-            reviews
+            reviews,
+            difficulty,
+            estimatedTime
         };
 
-    }).sort((a, b) => {                 // Sort in descending order by rating and then by reviews
+    }))).sort((a, b) => {                 // Sort in descending order by rating and then by reviews
         if (b.rating === a.rating) {
             return b.reviews - a.reviews;
         }
