@@ -13,8 +13,9 @@ function renderFood() {
 
     searchForRecipes(foodItem.name).then((recipes) => {
       let topRecipe = recipes[0];
-      cellImage.innerHTML = `<img class="screenshot" src="${foodItem.src}"><br><br> ${topRecipe.name}`;
-
+      cellImage.innerHTML = `<img class="screenshot" src="${foodItem.src}"><br><br> <h3>${topRecipe.name}</h3>
+      <strong>Recipe by:</strong> ${topRecipe.author}<br><br><a href="https:${topRecipe.link}" target="_blank"><div class="recipeButton">&#128073; Get Recipe! &#128072;</div></a>`;
+      console.log(topRecipe.link.substring(2));
     });
   });
 }

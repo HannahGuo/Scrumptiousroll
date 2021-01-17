@@ -68,6 +68,24 @@ h1 {
     background-color: #004d1a;
 }
 
+.recipeButton {
+    font-family: 'Potta One', cursive;
+    background-color: #0000be;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    margin: 0 auto;
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+.recipeButton:hover{
+    background-color: #00008b;
+}
+
 .screenshot {
     width: 100%;
     height: auto;
