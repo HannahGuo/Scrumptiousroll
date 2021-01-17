@@ -1,5 +1,4 @@
 let foundFoodButton = document.getElementById('foodDetectedButton');
-let backgroundPage = chrome.extension.getBackgroundPage();
 
 function renderFood() {
   let foodList = document.getElementById("labelledImage");
@@ -8,7 +7,6 @@ function renderFood() {
   }
 
   let foodObjects = JSON.parse(localStorage.getItem("foodObjects") || "[]");
-  backgroundPage.console.log('foo');
 
   foodObjects.forEach(function (foodItem, index) {
     let screenshot = document.createElement("img");
@@ -41,4 +39,8 @@ foundFoodButton.onclick = function (element) {
   });
 };
 
-document.onload = renderFood();
+(function() {
+  // your page initialization code here
+  // the DOM will be available here
+  renderFood();
+})();
