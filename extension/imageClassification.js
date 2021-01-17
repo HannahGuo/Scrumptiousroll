@@ -16,7 +16,7 @@ mobilenet.load().then(model => {
  * @param {HTMLImageElement} image 
  * @returns {Prediction[]}
  */
-const getFoodPredictionsForImage = async image => {
+let getFoodPredictionsForImage = async image => {
     if (!foodModel) {
         foodModel = await mobilenet.load(); // TODO: Load our food model when complete
     }

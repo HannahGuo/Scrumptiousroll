@@ -1,7 +1,7 @@
 //@ts-check
 
-const FOOD_NETWORK_BASE_URL = 'https://www.foodnetwork.com/search/';
-const FOOD_NETWORK_SUFFIX = "-/CUSTOM_FACET:RECIPE_FACET";  // Search for ONLY recipes
+let FOOD_NETWORK_BASE_URL = 'https://www.foodnetwork.com/search/';
+let FOOD_NETWORK_SUFFIX = "-/CUSTOM_FACET:RECIPE_FACET";  // Search for ONLY recipes
 
 /**
  * @typedef RecipeResult
@@ -19,7 +19,8 @@ const FOOD_NETWORK_SUFFIX = "-/CUSTOM_FACET:RECIPE_FACET";  // Search for ONLY r
  * @param {string} keywords Keywords to search websites for
  * @returns {Promise<RecipeResult[]>} Array of recipes sorted in descending order by rating and then by reviews
  */
-const searchForRecipes = async keywords => {
+let searchForRecipes = async keywords => {
+
     const response = await fetch(`${FOOD_NETWORK_BASE_URL}${keywords}${FOOD_NETWORK_SUFFIX}`);
     const doc = new DOMParser().parseFromString((await response.text()), 'text/html');
     const recipeElements = doc.querySelectorAll('.o-RecipeResult');
