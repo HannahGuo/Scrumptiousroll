@@ -10,7 +10,13 @@ function renderFood() {
   foodObjects.forEach(function (foodItem, index) {
     let newFoodEntry = foodList.insertRow(0);
     let cellImage = newFoodEntry.insertCell(0);
-    cellImage.innerHTML = `<img class="screenshot" src="${foodItem.src}"><br><br>NEW CELL2`;
+
+    searchForRecipes(foodItem.name).then((recipes) => {
+      let topRecipe = recipes[0];
+      cellImage.innerHTML = `<img class="screenshot" src="${foodItem.src}"><br><br> <h3>${topRecipe.name}</h3>
+      <strong>Recipe by:</strong> ${topRecipe.author}<br><br><a href="https:${topRecipe.link}" target="_blank"><div class="recipeButton">&#128073; Get Recipe! &#128072;</div></a>`;
+      console.log(topRecipe.link.substring(2));
+    });
   });
 }
 
@@ -18,7 +24,7 @@ foundFoodButton.onclick = function (element) {
   chrome.tabs.captureVisibleTab(null, {}, function (image) {
     let newFood = {
       src: image,
-      recipes: "filler"
+      name: "from modal"
     };
 
     let foodObjects = JSON.parse(localStorage.getItem("foodObjects") || "[]");
@@ -26,10 +32,10 @@ foundFoodButton.onclick = function (element) {
     localStorage.setItem("foodObjects", JSON.stringify(foodObjects));
     renderFood();
 
-    alert("New food had been added!")
+    alert("New food had been added!");
 
     // Predict the food
-    const imageElement = document.querySelector('#screenshot');
+    const imageElement = document.querySelector('#tabScreenshot');
     imageElement.src = image;
     imageElement.onload = () => { // Tensorflow doesn't like not seeing a width and height attribute on the element, so we have to set it ourselves before classifying it.
       imageElement.setAttribute('width', imageElement.width);
@@ -56,12 +62,15 @@ showRecipesButton.onclick = function (element) {
 document.addEventListener('DOMContentLoaded', function () {
   var links = document.getElementsByTagName("a");
   for (var i = 0; i < links.length; i++) {
-      (function () {
-          var ln = links[i];
-          var location = ln.href;
-          ln.onclick = function () {
-              chrome.tabs.create({active: true, url: location});
-          };
-      })();
+    (function () {
+      var ln = links[i];
+      var location = ln.href;
+      ln.onclick = function () {
+        chrome.tabs.create({
+          active: true,
+          url: location
+        });
+      };
+    })();
   }
 });
